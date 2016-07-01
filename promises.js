@@ -28,7 +28,6 @@ var getUserAvatarWithBlueBird = function(user) {
 		github.search.users({q :user }, function(err, res) {
 			if (err) { reject(err); }
 			else {
-
 				var avatarUrl = res.items[0].avatar_url;
 				resolve(avatarUrl);
 			}
@@ -42,4 +41,25 @@ getUserAvatarWithBlueBird('sanlouise')
 })
 .catch(function(error) {
 	console.log('Error with Bluebird', error);
+});
+
+//Using Promises, now with Q
+var getUserAvatarWithQ = function(user) {
+	var deferred = Q.defer();
+	github.search.users({q :user }, function(err, res) {
+		if (err) { deferred.reject(err); }
+		else {
+			var avatarUrl = res.items[0].avatar_url;
+			deferred.resolve(avatarUrl);
+		}
+	});
+	return deferred.promise;
+};
+
+getUserAvatarWithQ('sanlouise')
+.then(function(avatarUrl) {
+	console.log('Got url with Q', avatarUrl);
+})
+.catch(function(error) {
+	console.log('Error with Q', error);
 });
